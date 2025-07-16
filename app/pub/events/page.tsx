@@ -24,6 +24,7 @@ import Image from 'next/image';
 import { Calendar, MapPin, Search } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
+import { transformImageUrl } from '@/lib/utils';
 
 interface Event {
   event_name: string;
@@ -119,7 +120,7 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen pb-16">
       <div className="bg-gradient-to-b from-primary/20 to-background pt-24 pb-10">
-        <MaxWidthWrapper>
+        <MaxWidthWrapper className={''}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -288,7 +289,7 @@ function EventCard({ event }: { event: Event }) {
       <Card className="overflow-hidden h-full border border-border/40 transition-all duration-300 hover:shadow-lg hover:border-primary/20 hover:-translate-y-1 cursor-pointer">
         <div className="relative h-48 w-full">
           <Image
-            src={event.image}
+            src={transformImageUrl(event.image)}
             alt={event.event_name}
             fill
             className="object-cover"

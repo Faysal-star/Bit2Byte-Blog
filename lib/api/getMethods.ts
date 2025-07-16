@@ -27,8 +27,9 @@ export async function getSingleBlog(id: string) {
       revalidate: revalidationTime,
     },
   });
+  console.log(result);
   if (!result.ok) {
-    throw new Error("Error occured while fetching");
+    throw new Error("Error occured while fetching" );
   }
   return result.json();
 }

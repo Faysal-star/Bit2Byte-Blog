@@ -9,7 +9,7 @@ import OnThisPage from "./blogs/Onthispage";
 import { SearchBlogBar } from "./blogs/SearchBlogBar";
 import SingleComment from "./blogs/SingleComment";
 import Footer from "./home/Footer";
-import GlobeComp from "./home/GlobeComp";
+// import GlobeComp from "./home/GlobeComp";
 import LampHeader from "./home/LampHeader";
 import Mission from "./home/Mission";
 import NavBar from "./navbar/NavBar";
@@ -48,7 +48,7 @@ export {
   CarouselImage,
   Comments,
   Footer,
-  GlobeComp,
+  // GlobeComp,
   LampHeader,
   // MarkdownEditor,
   MaxWidthWrapper,

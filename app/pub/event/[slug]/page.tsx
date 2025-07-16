@@ -21,6 +21,7 @@ import {
   CardContent
 } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { transformImageUrl } from '@/lib/utils';
 
 interface EventImage {
   image: string;
@@ -132,7 +133,7 @@ export default function EventPage({ params }: { params: { slug: string } }) {
   if (loading) {
     return (
       <div className="min-h-screen pt-24 pb-16">
-        <MaxWidthWrapper>
+        <MaxWidthWrapper className={''}>
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded w-1/3 mb-4"></div>
             <div className="h-96 bg-muted rounded mb-8"></div>
@@ -153,7 +154,7 @@ export default function EventPage({ params }: { params: { slug: string } }) {
   if (error || !event) {
     return (
       <div className="min-h-screen pt-24 pb-16">
-        <MaxWidthWrapper>
+        <MaxWidthWrapper className={''}>
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Error Loading Event</h2>
             <p className="text-muted-foreground mb-6">{error || 'Event not found'}</p>
@@ -171,7 +172,7 @@ export default function EventPage({ params }: { params: { slug: string } }) {
       {/* Hero section with event image */}
       <div className="w-full h-[40vh] sm:h-[50vh] relative bg-black">
         <Image
-          src={event.image}
+          src={transformImageUrl(event.image)}
           alt={event.event_name}
           fill
           className="object-cover opacity-70"
@@ -181,7 +182,7 @@ export default function EventPage({ params }: { params: { slug: string } }) {
         <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
         
         <div className="absolute bottom-0 left-0 right-0 p-6">
-          <MaxWidthWrapper>
+          <MaxWidthWrapper className={''}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -272,7 +273,7 @@ export default function EventPage({ params }: { params: { slug: string } }) {
                         <CarouselItem key={index}>
                           <div className="relative overflow-hidden rounded-xl aspect-video">
                             <Image
-                              src={item.image}
+                              src={transformImageUrl(item.image)}
                               alt={`Event photo ${index + 1}`}
                               fill
                               className="object-cover"

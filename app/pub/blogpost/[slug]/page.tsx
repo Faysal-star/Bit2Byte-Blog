@@ -3,6 +3,7 @@ import { Comments, MaxWidthWrapper, OnThisPage } from "@/components/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getSingleBlog } from "@/lib/api";
+import { transformImageUrl } from "@/lib/utils";
 import parse, { DOMNode, domToReact, Element } from "html-react-parser";
 import { marked } from "marked";
 import { Metadata, ResolvingMetadata } from "next";
@@ -99,7 +100,7 @@ const convertHtmlToNextImage = (htmlContent: string) => {
         const imgHeight = height ? parseInt(height, 10) : undefined;
 
         const imageProps = {
-          src,
+          src: transformImageUrl(src),
           alt: "next image",
           width: imgWidth || 800,
           height: imgHeight || 600,
@@ -152,7 +153,7 @@ export default async function BlogPage({
       <div className="relative w-full h-[400px] lg:h-[500px] overflow-hidden rounded-xl shadow-lg">
         {/* Background Image */}
         <Image
-          src={data.image}
+          src={transformImageUrl(data.image)}
           alt={data.title}
           fill
           className="object-contain object-center"
@@ -206,18 +207,18 @@ export default async function BlogPage({
   );
 }
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const resData = await getSingleBlog(params.slug);
-  const data = resData.data;
+// export async function generateMetadata(
+//   { params }: Props,
+//   parent: ResolvingMetadata
+// ): Promise<Metadata> {
+//   const resData = await getSingleBlog(params.slug);
+//   const data = resData.data;
 
-  return {
-    title: `${data.title} - Bit2Byte`,
-    description: data.short_desc,
-  };
-}
+//   return {
+//     title: `${data.title} - Bit2Byte`,
+//     description: data.short_desc,
+//   };
+// }
 
 function DateTimeDisplay({ creationTime }: { creationTime: string }) {
   const date = new Date(creationTime);

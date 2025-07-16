@@ -11,6 +11,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import { transformImageUrl } from "@/lib/utils";
 
 export default function CarouselImage({ imageList }: { imageList: string[] }) {
   const plugin = React.useRef(
@@ -31,7 +32,7 @@ export default function CarouselImage({ imageList }: { imageList: string[] }) {
               {/* Set a fixed height */}
               <CardContent className="flex items-center justify-center  relative h-full rounded-none">
                 <Image
-                  src={e}
+                  src={transformImageUrl(e)}
                   className="object-cover"
                   alt={`Carousel image ${index + 1}`}
                   fill // Allow Image to fill the CardContent

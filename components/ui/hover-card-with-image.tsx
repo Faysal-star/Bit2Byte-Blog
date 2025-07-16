@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import { transformImageUrl } from "@/lib/utils";
 
 export const HoverImageCard = ({
   items,
@@ -47,7 +48,7 @@ export const HoverImageCard = ({
           {/* Image */}
           <CardItem translateZ="10" className="w-full mt-4">
             <Image
-              src={item.image || "/images/blogimg.jpg"}
+              src={transformImageUrl(item.image)}
               width={500}
               height={500}
               quality={70}

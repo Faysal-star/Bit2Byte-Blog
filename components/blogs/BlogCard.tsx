@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, transformImageUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -41,7 +41,7 @@ export default function BlogCard({ blog }: { blog: BlogType }) {
         {/* Fixed-width image container */}
         <div className="flex-shrink-0 flex justify-center items-center pl-5">
           <Image
-            src={blog.image || "/images/blogimg.jpg"}
+            src={transformImageUrl(blog.image)}
             width={200} // Adjust as needed
             height={200} // Adjust to maintain aspect ratio
             quality={70}
@@ -60,7 +60,7 @@ export default function BlogCard({ blog }: { blog: BlogType }) {
           </div>
             <div className="flex items-center space-x-2 mt-4">
             <Image
-              src={blog.author_image}
+              src={transformImageUrl(blog.author_image)}
               width={30}
               height={30}
               placeholder="blur"

@@ -40,6 +40,7 @@ export async function signUpUser(
     //   throw JSON.parse(await response.text());
     // }
     const responseData: SignUpResponse = await response.json();
+    console.log("signUpUser", responseData);
     return responseData;
 
   } catch (error) {
@@ -69,6 +70,7 @@ export interface LoginResponse {
 export async function loginUser(params: LoginParams): Promise<LoginResponse> {
   const { email, password } = params;
 
+  // console.log("loginUser", email, password);
   try {
     const response = await fetch(`${BASE_URL}/login`, {
       method: "POST",
@@ -77,7 +79,9 @@ export async function loginUser(params: LoginParams): Promise<LoginResponse> {
       },
       body: JSON.stringify({ email, password }),
     });
+    // console.log(response);
     const responseData: LoginResponse = await response.json();
+    // console.log(responseData)
     return responseData;
   } catch (error) {
     throw new Error(

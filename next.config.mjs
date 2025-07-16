@@ -25,6 +25,12 @@ const nextConfig = {
             pathname: '/**',
             port: '',
         },
+        {
+            protocol: 'https',
+            hostname: 'apiendpoint.site',
+            port: '',
+            pathname: '/**',
+        },
     
     ],
     },

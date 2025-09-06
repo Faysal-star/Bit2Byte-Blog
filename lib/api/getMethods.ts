@@ -1,4 +1,15 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://apiendpoint.site/b2b/api/v1';
+
+// Configuration to handle HTTP requests and avoid SSL issues
+const fetchConfig = {
+  // Disable SSL verification for development (only use if absolutely necessary)
+  ...(process.env.NODE_ENV === 'development' && {
+    agent: typeof window === 'undefined' ? new (require('https').Agent)({
+      rejectUnauthorized: false
+    }) : undefined
+  })
+};
+
 
 const revalidationTime = 10;
 
@@ -9,10 +20,13 @@ export async function getAllBlogs() {
       next: {
         revalidate: revalidationTime,
       },
+      ...fetchConfig,
     });
     if (!result.ok) {
       throw new Error("Error occured while fetching");
     }
+    // console.log("gereeee");
+    // console.log(result);
     return result.json();
   } catch (error) {
     console.error("Error in getAllBlogs:", error);
@@ -26,7 +40,9 @@ export async function getSingleBlog(id: string) {
     next: {
       revalidate: revalidationTime,
     },
+    ...fetchConfig,
   });
+  // console.log("gereeee");
   console.log(result);
   if (!result.ok) {
     throw new Error("Error occured while fetching" );
@@ -41,6 +57,7 @@ export async function getSyllabus() {
       next: {
         revalidate: revalidationTime,
       },
+      ...fetchConfig,
     });
     if (!result.ok) {
       throw new Error("Error occured while fetching");
@@ -61,6 +78,7 @@ export async function getFilteredBlog(topic: string, subtopic: string | null) {
     next: {
       revalidate: revalidationTime,
     },
+    ...fetchConfig,
   });
   if (!result.ok) {
     throw "Error occured while fetching";
@@ -75,6 +93,7 @@ export async function getRedirectName(link_name: string) {
       next: {
         revalidate: revalidationTime,
       },
+      ...fetchConfig,
     });
 
     if (!result.ok) {

@@ -8,7 +8,7 @@ const nextConfig = {
             pathname: '/**',
         }, 
         {
-            protocol: 'https',
+            protocol: 'http',
             hostname: '88.222.244.211',
             port: '',
             pathname: '/**',
@@ -24,6 +24,12 @@ const nextConfig = {
             hostname: 'i.postimg.cc',
             pathname: '/**',
             port: '',
+        },
+        {
+            protocol: 'http',
+            hostname: 'apiendpoint.site',
+            port: '',
+            pathname: '/**',
         },
         {
             protocol: 'https',

@@ -16,19 +16,19 @@ interface BlogType {
   author_image: string;
 }
 
-const data = {
-  id: 313,
-  topic_id: 3,
-  sub_topic_id: 313,
-  title: "JavaScript - Regular Expressions",
-  image: "https://88.222.244.211/public/photos/blog_info_image_313.jpeg",
-  author_image: "https://88.222.244.211/public/photos/rahman2007007.jpg",
-  last_updated: 1740838809172,
-  creation_time: 1740838809172,
-  written_by: "Md. Sakibur Rahman",
-  short_desc: "Find you patters",
-  approved_by: "Pantho Haque",
-};
+// const data = {
+//   id: 313,
+//   topic_id: 3,
+//   sub_topic_id: 313,
+//   title: "JavaScript - Regular Expressions",
+//   image: "https://88.222.244.211/public/photos/blog_info_image_313.jpeg",
+//   author_image: "https://88.222.244.211/public/photos/rahman2007007.jpg",
+//   last_updated: 1740838809172,
+//   creation_time: 1740838809172,
+//   written_by: "Md. Sakibur Rahman",
+//   short_desc: "Find you patters",
+//   approved_by: "Pantho Haque",
+// };
 
 export default function BlogCard({ blog }: { blog: BlogType }) {
   return (

@@ -29,7 +29,7 @@ export async function getSingleBlog(id: string) {
   });
   console.log(result);
   if (!result.ok) {
-    throw new Error("Error occured while fetching" );
+    throw new Error("Error occured while fetching");
   }
   return result.json();
 }
@@ -49,13 +49,13 @@ export async function getSyllabus() {
   } catch (error) {
     console.error("Error in getSyllabus:", error);
     throw error;
-    
+
   }
 }
 
 export async function getFilteredBlog(topic: string, subtopic: string | null) {
   let url = `${BASE_URL}/filter_by?topic=${topic}` + (subtopic ? `&subtopic=${subtopic}` : "");
-  
+
   const result: any = await fetch(url, {
     //   cache: "no-store",
     next: {

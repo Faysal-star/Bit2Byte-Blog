@@ -6,7 +6,7 @@ import {
   getRedirectName,
 } from "./getMethods";
 
-import { signUpUser, loginUser } from "./postMethods";
+import { signUpUser, loginUser, logoutUser } from "./postMethods";
 
 export {
   getAllBlogs,
@@ -16,4 +16,5 @@ export {
   getRedirectName,
   signUpUser,
   loginUser,
+  logoutUser,
 };

@@ -1,76 +1,97 @@
 "use client";
 
-import React, { useContext, useState, ReactNode, createContext, useEffect } from "react";
+import React, {
+    useContext,
+    useState,
+    ReactNode,
+    createContext,
+    useEffect,
+} from "react";
 import { useRouter } from "next/navigation";
+import { User } from "@/types";
+import { logoutUser } from "./api/postMethods";
+import { useToast } from "@/components/ui/toast-context";
 
 interface AuthContextType {
-  user: { username: string } | null;
-  isLoading: boolean;
-  login: (userData: { username: string; token: string }) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
+    user: User | null;
+    isLoading: boolean;
+    login: (userData: User) => Promise<void>;
+    logout: () => void;
+    isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error("useAuth must be used within an AuthProvider");
+    }
+    return context;
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<null | { username: string }>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
+    const [user, setUser] = useState<null | User>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
+    const { setErrorMsg } = useToast();
 
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-      setUser(userData);
+    useEffect(() => {
+        try {
+            const userData = localStorage.getItem("userData");
+            if (userData) {
+                const parsedUser = JSON.parse(userData);
+                setUser(parsedUser);
+            }
+        } catch (error) {
+            console.error("Error parsing user data:", error);
+            localStorage.removeItem("userData");
+        }
+        setIsLoading(false);
+    }, []);
 
-      document.cookie = `authToken=${token}; path=/`;
-    }
-    setIsLoading(false);
-  }, []);
+    const login = async (userData: User) => {
+        const data = {
+            ...userData,
+            access_token: undefined,
+        };
 
-  const login = async (userData: { username: string; token: string }) => {
-    setUser({ username: userData.username });
-    localStorage.setItem('authToken', userData.token);
-    localStorage.setItem('userData', JSON.stringify({ username: userData.username }));
+        setUser(userData);
+        localStorage.setItem("userData", JSON.stringify(data));
 
-    document.cookie = `authToken=${userData.token}; path=/`;
-    
-    setTimeout(() => {
-      router.push('/');
-      router.refresh();
-    }, 100);
-  };
+        setTimeout(() => {
+            router.push("/");
+            router.refresh();
+        }, 100);
+    };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-    router.push('/auth');
-    router.refresh(); 
-  };
+    const logout = async () => {
+        try {
+            await logoutUser();
+        } catch (error) {
+            setErrorMsg(
+                error instanceof Error ? error.message : "Error logging out"
+            );
+            console.error("Error logging out:", error);
+        }
 
-  const value = {
-    user,
-    isLoading,
-    login,
-    logout,
-    isAuthenticated: !!user
-  };
+        setUser(null);
+        localStorage.removeItem("userData");
+        router.push("/auth");
+        router.refresh();
+    };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!isLoading && children}
-    </AuthContext.Provider>
-  );
+    const value = {
+        user,
+        isLoading,
+        login,
+        logout,
+        isAuthenticated: !!user,
+    };
+
+    return (
+        <AuthContext.Provider value={value}>
+            {!isLoading && children}
+        </AuthContext.Provider>
+    );
 }
-

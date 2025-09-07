@@ -1,4 +1,5 @@
-"use server"
+import { LoginInputSchema } from "@/schema/auth";
+import { User } from "@/types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -10,44 +11,55 @@ export interface SignUpParams {
   photo: File;
 }
 
-export interface SignUpResponse {
-  data: {
-    username: string;
-  };
+export interface LoginResponse {
+  data: User | null;
   message: string;
-  success:boolean;
+  success: boolean;
 }
 
 export async function signUpUser(
-  // params: SignUpParams
   formData: FormData
-): Promise<SignUpResponse> {
-  // const { email, password, name, photo } = params;
-
-  // const formData = new FormData();
-  // formData.append("email", email);
-  // formData.append("password", password);
-  // formData.append("name", name);
-  // formData.append("photo", photo);
-
+): Promise<LoginResponse> {
   try {
+    const info = formData.get('info');
+    const photo = formData.get('photo');
+    const formDataToSend = new FormData();
+    
+    // Add the info as a JSON blob with proper content type
+    if (info) {
+      const infoBlob = new Blob([info as string], { 
+        type: 'application/json' 
+      });
+      formDataToSend.append('info', infoBlob);
+    }
+    
+    if (photo) {
+      formDataToSend.append('photo', photo);
+    }
+    
     const response = await fetch(`${BASE_URL}/sign_up`, {
       method: "POST",
-      body: formData,
+      credentials: "include",
+      body: formDataToSend,
     });
 
-    // if (!response.ok) {
-    //   throw JSON.parse(await response.text());
-    // }
-    const responseData: SignUpResponse = await response.json();
+    const responseData: LoginResponse = await response.json();
+
+    if (!response.ok) {
+      throw new Error(responseData.message || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
     console.log("signUpUser", responseData);
     return responseData;
 
   } catch (error) {
-    // throw error;
-    throw new Error(
-      error instanceof Error ? error.message : "An unexpected error occurred."
-    );
+    console.error("SignUp error:", error);
+    
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unexpected error occurred during registration.");
+    }
   }
 }
 
@@ -58,34 +70,59 @@ export interface LoginParams {
   password: string;
 }
 
-export interface LoginResponse {
-  data: {
-    username: string;
-    token: string;
-  };
-  message: string;
-  status:"error"|"warning"|"info"|"success";
-}
-
 export async function loginUser(params: LoginParams): Promise<LoginResponse> {
   const { email, password } = params;
 
-  // console.log("loginUser", email, password);
   try {
+    const validatedInput = LoginInputSchema.parse({ email, password });
+
     const response = await fetch(`${BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      credentials: "include",
+      body: JSON.stringify(validatedInput),
     });
-    // console.log(response);
+
     const responseData: LoginResponse = await response.json();
-    // console.log(responseData)
+
+    if (!response.ok) {
+      throw new Error(responseData.message || `HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    return responseData;
+
+  } catch (error) {
+    console.error("Login error:", error);
+    
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unexpected error occurred during login.");
+    }
+  }
+}
+
+export async function logoutUser(): Promise<{ message: string; success: boolean }> {
+  try {
+    const response = await fetch(`${BASE_URL}/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+    
+    const responseData: { message: string; success: boolean } = await response.json();
+
+    if (!response.ok) {
+      throw new Error(responseData.message || `HTTP ${response.status}: ${response.statusText}`);
+    }
     return responseData;
   } catch (error) {
-    throw new Error(
-      error instanceof Error ? error.message : "An unexpected error occurred."
-    );
+    console.error("Logout error:", error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unexpected error occurred during logout.");
+    }
   }
 }

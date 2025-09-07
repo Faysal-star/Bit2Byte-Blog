@@ -18,7 +18,7 @@ const Login = () => {
   };
 
   return (
-    <div className="relative w-[98%] h-[82vh]  mx-auto flex flex-col justify-center items-center p-6 lg:p-8 shadow-lg bg-cover md:bg-contain bg-center"
+    <div className="relative w-full h-[90vh]  mx-auto flex flex-col justify-center items-center p-6 lg:p-8 shadow-lg bg-cover md:bg-contain bg-center"
     style={{
       backgroundImage: `url('/images/loginpage.svg')`
     }}

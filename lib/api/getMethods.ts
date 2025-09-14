@@ -11,23 +11,31 @@ const fetchConfig = {
 };
 
 
+console.log("API BASE_URL:", BASE_URL);
+
 const revalidationTime = 10;
 
-export async function getAllBlogs() {
+export async function getAllBlogs(page = 0, itemsPerPage = 12) {
   try {
-    const result: any = await fetch(`${BASE_URL}/read_blogs`, {
+    const url = `${BASE_URL}/read_blogs?page=${page}&item_per_page=${itemsPerPage}`;
+    console.log("Fetching blogs from:", url);
+    
+    const result: any = await fetch(url, {
       // cache: "no-store",
       next: {
         revalidate: revalidationTime,
       },
       ...fetchConfig,
     });
+    
     if (!result.ok) {
-      throw new Error("Error occured while fetching");
+      console.error(`Failed to fetch blogs: ${result.status} ${result.statusText}`);
+      throw new Error(`Error occurred while fetching: ${result.status} ${result.statusText}`);
     }
-    // console.log("gereeee");
-    // console.log(result);
-    return result.json();
+    
+    const data = await result.json();
+    console.log("Blog data received:", data);
+    return data;
   } catch (error) {
     console.error("Error in getAllBlogs:", error);
     throw error;
@@ -52,21 +60,28 @@ export async function getSingleBlog(id: string) {
 
 export async function getSyllabus() {
   try {
-    const result: any = await fetch(`${BASE_URL}/read_syllabus`, {
+    const url = `${BASE_URL}/read_syllabus`;
+    console.log("Fetching syllabus from:", url);
+    
+    const result: any = await fetch(url, {
       //   cache: "no-store",
       next: {
         revalidate: revalidationTime,
       },
       ...fetchConfig,
     });
+    
     if (!result.ok) {
-      throw new Error("Error occured while fetching");
+      console.error(`Failed to fetch syllabus: ${result.status} ${result.statusText}`);
+      throw new Error(`Error occurred while fetching: ${result.status} ${result.statusText}`);
     }
-    return result.json();
+    
+    const data = await result.json();
+    console.log("Syllabus data received:", data);
+    return data;
   } catch (error) {
     console.error("Error in getSyllabus:", error);
     throw error;
-
   }
 }
 
@@ -83,12 +98,11 @@ export async function getFilteredBlog(topic: string, subtopic: string | null) {
   if (!result.ok) {
     throw "Error occured while fetching";
   }
-  return result.json();
 }
 
-export async function getRedirectName(link_name: string) {
+export async function getRedirectName(title: string) {
   try {
-    const url = `${BASE_URL}/read_link?link_name=${link_name}`;
+    const url = `${BASE_URL}/read_link?title=${title}`;
     const result = await fetch(url, {
       next: {
         revalidate: revalidationTime,
